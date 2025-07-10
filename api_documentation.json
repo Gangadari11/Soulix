@@ -1,0 +1,196 @@
+{
+  "MindBloom API Documentation": {
+    "base_url": "http://localhost:5000/api",
+    "authentication": "JWT Bearer Token",
+
+    "auth_endpoints": {
+      "POST /auth/register": {
+        "description": "Register a new user",
+        "body": {
+          "name": "string (required)",
+          "email": "string (required)",
+          "password": "string (required, min 6 chars)"
+        },
+        "response": {
+          "access_token": "string",
+          "user": "object"
+        }
+      },
+
+      "POST /auth/login": {
+        "description": "Login user",
+        "body": {
+          "email": "string (required)",
+          "password": "string (required)"
+        },
+        "response": {
+          "access_token": "string",
+          "user": "object"
+        }
+      },
+
+      "GET /auth/profile": {
+        "description": "Get user profile with statistics",
+        "headers": {
+          "Authorization": "Bearer <token>"
+        },
+        "response": {
+          "user": "object",
+          "statistics": "object",
+          "recent_moods": "array"
+        }
+      },
+
+      "PUT /auth/profile": {
+        "description": "Update user profile",
+        "headers": {
+          "Authorization": "Bearer <token>"
+        },
+        "body": {
+          "name": "string (optional)",
+          "email": "string (optional)"
+        }
+      }
+    },
+
+    "counselor_endpoints": {
+      "GET /counselors": {
+        "description": "Get all counselors with optional filtering",
+        "query_params": {
+          "specialty": "string (optional)",
+          "availability": "string (optional)"
+        },
+        "response": {
+          "counselors": "array",
+          "total": "number"
+        }
+      },
+
+      "GET /counselors/:id": {
+        "description": "Get counselor details with reviews",
+        "response": {
+          "counselor": "object",
+          "reviews": "array"
+        }
+      },
+
+      "POST /counselors/:id/book": {
+        "description": "Book a session with counselor",
+        "headers": {
+          "Authorization": "Bearer <token>"
+        },
+        "body": {
+          "session_type": "string (required)",
+          "scheduled_date": "string (ISO format, required)",
+          "duration_minutes": "number (optional, default 60)",
+          "notes": "string (optional)"
+        }
+      }
+    },
+
+    "mood_endpoints": {
+      "GET /mood/entries": {
+        "description": "Get user's mood entries",
+        "headers": {
+          "Authorization": "Bearer <token>"
+        },
+        "query_params": {
+          "limit": "number (optional, default 30)",
+          "days": "number (optional, default 30)"
+        },
+        "response": {
+          "mood_entries": "array",
+          "statistics": "object"
+        }
+      },
+
+      "POST /mood/entries": {
+        "description": "Create a new mood entry",
+        "headers": {
+          "Authorization": "Bearer <token>"
+        },
+        "body": {
+          "mood": "string (required: happy, sad, anxious, calm, angry)",
+          "intensity": "number (required: 1-10)",
+          "notes": "string (optional)"
+        },
+        "response": {
+          "mood_entry": "object"
+        }
+      },
+
+      "GET /mood/analytics": {
+        "description": "Get mood analytics and trends",
+        "headers": {
+          "Authorization": "Bearer <token>"
+        },
+        "query_params": {
+          "days": "number (optional, default 30)"
+        },
+        "response": {
+          "analytics": {
+            "total_entries": "number",
+            "mood_trends": "array",
+            "intensity_trends": "array",
+            "mood_distribution": "object",
+            "average_intensity_by_mood": "object",
+            "weekly_summary": "array"
+          }
+        }
+      }
+    },
+
+    "chat_endpoints": {
+      "GET /chat/sessions": {
+        "description": "Get user's chat sessions",
+        "headers": {
+          "Authorization": "Bearer <token>"
+        },
+        "response": {
+          "sessions": "array"
+        }
+      },
+
+      "POST /chat/sessions": {
+        "description": "Create a new chat session",
+        "headers": {
+          "Authorization": "Bearer <token>"
+        },
+        "body": {
+          "title": "string (optional)"
+        },
+        "response": {
+          "session": "object"
+        }
+      }
+    },
+
+    "emotion_endpoints": {
+      "POST /classify-emotion": {
+        "description": "Classify emotion from text",
+        "body": {
+          "text": "string (required, max 1000 chars)"
+        },
+        "response": {
+          "emotion": "string",
+          "confidence": "number",
+          "method": "string",
+          "success": "boolean"
+        }
+      }
+    },
+
+    "utility_endpoints": {
+      "GET /health": {
+        "description": "Health check endpoint",
+        "response": {
+          "status": "string",
+          "service": "string",
+          "version": "string",
+          "model_loaded": "boolean",
+          "features": "array"
+        }
+      }
+    }
+  }
+}

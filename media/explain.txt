@@ -1,0 +1,2 @@
+This folder has the model which trained for emotion classification.
+And the flask code for run that model.
